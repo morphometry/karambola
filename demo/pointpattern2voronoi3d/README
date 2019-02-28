@@ -1,0 +1,111 @@
+=================
+= what is this? =
+=================
+
+This program reads in a point pattern in xyz-format, calls qhull to compute a voronoi-tessellation and writes out the voronoi cells in poly-format.
+
+Separate modes/boundary-conditions are possible(defined in the input file):
+* periodic_cuboidal
+* minus_sample_cuboidal
+* minus_sample_cylindrical
+
+Periodic boundaries are archived by copying some of the points to all virtual neighboring volumes so that qhull "sees" the periodicity. Set this by the -p/--padding parameter.
+
+The minus-sampling stands for no periodicity. The voronoi cells at the outer layer of the point pattern are differing of the ones inside because the next points are missing. For statistics it is convenient to cut away some of them. This is archived by the -m/--margin parameter. The flag --saveSeeds can be used to save the remaining points in a xyz-like-file. For this -seeds.xyz is appended to the output filename. The last column in this file is the point index of the polygon-number.
+
+Note that margin and padding should not be too low. A higher padding results in more computation time, while a hight margin results in more cells been cut away. A too low padding or margin results in "degenerated" voronoi cells, what will break your statistics. Just guesstimate 2-3 "layers" of your particles and thats it.
+
+Input and output file are specified by -i and -o.
+Additional arguments are -s/--shiftSiteToOrigin, -t/--triangulateOutput and -D for massive debugging output
+
+All this is archived by the following data flow:
+* read xyz-files
+ - test weather they are in the right format, containing the right information and are called using the right parameters
+ - copy points in the case of periodic boundaries 
+* call qhull
+ - write all files in a temporary file (can be set hardcoded in "PointPattern2Voronoi3d.h"
+ - call qhull (yes here!)
+ - read in qhull-output
+    while reading save if faces lie outside the volume in question not to be saved to poly afterwards
+* write poly-file
+ - for all points that are accepted as inside
+
+
+=========
+= build =
+=========
+This program requires to build:
+* ansi-C++-compiler like g++ atm, change in Makefile, FileUtil.cc uses some old c-functions, beware of that!
+* blitz++(http://www.oonumerics.org/blitz/, or you local weapon trader)
+* qhull must be installed and accessible
+
+then simply type: make
+
+========
+= help =
+========
+use -h or --help, should be all explained after having read this documentation...
+
+==============
+= xyz-format =
+==============
+
+The original format description: https://secure.wikimedia.org/wikipedia/de/wiki/Xyz-Format
+We use this format because it can be easy viewed using jmol (note that jmol uses a fixed atom radius of approx. 1.
+
+Format description
+
+1st line: N (count of points listed)
+2nd line: comment, comma separated pairs of key=value
+3rd line and following: id and point coordinates, id may contain anything being read as std::string, that is NO whitespaces...
+
+Example:
+8
+boundary_condition = periodic_cuboidal, boxsz=2
+P 0.5 0.5 0.5
+P 0.5 0.5 1.5
+P 0.5 1.5 0.5
+P 0.5 1.5 1.5
+P 1.5 0.5 0.5
+P 1.5 0.5 1.5
+P 1.5 1.5 0.5
+P 1.5 1.5 1.5
+
+Parsed values in comment
+
+"boundary_condition": must be either "minus_sample_cuboidal" or "periodic_cuboidal" "minus_sample_cylindrical"
+with cuboidal: "boxsz" || ("boxsz_x" && "boxsz_y" && "boxsz_z"): box with border length("boxsz" alone means cube)...
+with cylindrical: "cyl_radius" && "cyl_height"
+
+The boxes are defined such that all points lie inside (0,0,0)-(boxsz_x, boxsz_y, boxsz_z).
+The cylinder is defined such that all points lie inside (0,0)-(cylsz_r, cylsz_h), where (r,z) are cylindrical coordinates.
+
+Note that boundary_condition and either boxsz or the triple of boxsz_ must be present.
+All other comment entries of type key=value are ignored
+
+===============
+= poly-format =
+===============
+Poly files consist of a list of point and a list of polygons referring to point indices. The format is pretty simple:
+
+POINTS
+1: 0 0 0
+2: 0 1 0
+3: 0 1 1
+4: 0 0 1
+POLYS
+1: 1 2 3 4 < c(0,0,0,1)
+END
+
+'<' stands for a closed polygon, the c(olor) specification codes the index of the voronoi-cell.
+All polygons are aligned facing outwards. Two separate voronoi cells have separate points even when this would result in 2 points with same coordinates.
+
+This output is aimed for usage with the tool karambola(http://theorie1.physik.uni-erlangen.de/research/karambola/).
+
+=======================
+= further information =
+=======================
+for further information please feel invited to contact me.
+
+
+Matthias Hoffmann <matthias.hoffmann@physik.uni-erlangen.de>

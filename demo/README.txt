@@ -3,15 +3,6 @@
 DEMOS FOR KARAMBOLA
 
 
-hexagonal_minimal_surface
-
-A family of hexagonal minimal surfaces is analyzed which contains one member
-which is isotropic with respect to the Minkowski Tensor analysis, meaning in
-this case its distribution of normals is isotropic.
-
-Run "run_all.sh", the final plot is found in the folder output_minkowski.
-
-
 hard_spheres
 
 Demonstrates the application of Minkowski Analysis to an ensemble of hard
