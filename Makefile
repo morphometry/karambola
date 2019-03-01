@@ -81,15 +81,15 @@ bilimbi: $(HDR) lib bilimbi.o
 	$(CXX) $(CXXFLAGS) -o $*.o -c $<
 
 runtests: $(TEST_OBJECTS) test_suite/runtests.o
-	$(CXX) $(CXXFLAGS) -o $@ $(TEST_OBJECTS) test_suite/runtests.o $(LIBRARY) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o test_suite/runtests $(TEST_OBJECTS) test_suite/runtests.o $(LIBRARY) $(LDFLAGS)
 
 test: runtests
-	./test_suite/runtests
+	(cd test_suite && ./runtests)
 
 
 clean:
 	find . -name \*.o -delete
-	rm -f $(BINARY) bilimbi test_suite/run_tests $(LIBRARY)
+	rm -f $(BINARY) bilimbi test_suite/runtests $(LIBRARY)
 
 tar:
 	git archive --format=tar --prefix=karambola-$(VERSION_NUMBER)/ master | bzip2 >../karambola-$(VERSION_NUMBER).tar.bz2
