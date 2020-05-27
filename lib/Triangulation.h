@@ -21,6 +21,7 @@ class Vertex{
     public:
         Vector pos;
         std::vector<unsigned int> triangles;
+        int number_in_file;
     private:
 };
 
@@ -41,7 +42,7 @@ inline bool test_isnan(double value){
 class Triangulation {
     public:
 
-        int append_vertex(double x , double y, double z);
+        int append_vertex(double x , double y, double z, int number_in_file);
 
         void change_pos_of_vertex(unsigned int i, double x , double y, double z);
         void change_pos_of_vertex(unsigned int i, Vector pos);
@@ -150,9 +151,14 @@ class Triangulation {
             return Vertices.at(a).triangles;
         }
 
-        //returs the coordinates of vertex a
+        //returns the coordinates of vertex a
         Vector get_pos_of_vertex(int a) const {
             return Vertices.at(a).pos;
+        }
+
+        //returns the original vertex number in poly file
+        int get_origial_number_of_vertex_in_file(int a) const {
+            return Vertices.at(a).number_in_file;
         }
 
     private:
@@ -169,8 +175,8 @@ public:
         tri_ = target;
     }
 
-    virtual long insert_vertex (double x, double y, double z, const prop_list_t &) {
-        return tri_->append_vertex (x, y, z);
+    virtual long insert_vertex (double x, double y, double z, const prop_list_t &props) {
+        return tri_->append_vertex (x, y, z, props.object_number);
     }
 
     virtual void insert_facet (const vertex_id_list_t &vs, const prop_list_t &props) {

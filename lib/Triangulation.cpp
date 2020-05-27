@@ -3,12 +3,13 @@
 
 
 
-int Triangulation::append_vertex(double x , double y, double z){
+int Triangulation::append_vertex(double x , double y, double z, int number_in_file){
     int ret = Vertices.size ();
     Vertex vert;
     vert.pos[0] = x;
     vert.pos[1] = y;
     vert.pos[2] = z;
+    vert.number_in_file = number_in_file;
     Vertices.push_back(vert);
     return ret;
 }

@@ -114,14 +114,14 @@ SurfaceStatistics check_surface(CalcOptions* CO, Triangulation& surface){
             errMsg << "smallest area = " << SurfStat.smallest_area << "\n";
             errMsg << "largest area  = " << SurfStat.largest_area << "\n";
             errMsg << "your polyfile is damaged\n" << "your normals are messed up!!" << "\n";
-            errMsg << "error occurs at vertex: " << i+1 << "\n";
+            errMsg << "error occurs at vertex: " << surface.get_origial_number_of_vertex_in_file(i) << "\n";
 //            errMsg << "and triangles " << triangle << " and " << old_triangle << "\n";
             throw std::runtime_error (errMsg.str().c_str());
         }
 
         if(surface.get_triangles_of_vertex(i).size() != sum_of_triangles && neigh_un == false){
             std::stringstream errMsg;
-            errMsg << "your polyfile is damaged\n" << "there are more than one objects at vertex " <<  i << ": " << surface.get_pos_of_vertex(i) << "\n";
+            errMsg << "your polyfile is damaged\n" << "there are more than one objects at vertex " <<  surface.get_origial_number_of_vertex_in_file(i) << ": " << surface.get_pos_of_vertex(i) << "\n";
             errMsg << "neighbour unassigned = " <<  neigh_un << "\n";
             errMsg << "surface.get_triangles_of_vertex(i).size() = " << surface.get_triangles_of_vertex(i).size()<< "\n";
             errMsg << "sum_of_triangles = " << sum_of_triangles << "\n";

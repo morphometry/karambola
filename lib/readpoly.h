@@ -21,6 +21,7 @@ public:
         bool is_attribute_present (string_t name) const;
 
         string_t object_id;
+        int object_number;
 
     private:
         const string_t &get_attr_ (string_t name) const;

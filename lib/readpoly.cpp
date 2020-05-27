@@ -267,6 +267,7 @@ namespace {
             prop_list_t properties;
             extract_all_properties (&properties);
             properties.object_id = "vertex " + int_to_string (number);
+            properties.object_number = number;
 
             int vert_id = sink->insert_vertex (x, y, z, properties);
 
@@ -294,6 +295,7 @@ namespace {
             prop_list_t properties;
             extract_all_properties (&properties);
             properties.object_id = "facet " + int_to_string (number);
+            properties.object_number = number;
 
             sink->insert_facet (vl, properties);
             ++num_facets;

@@ -5,6 +5,7 @@ karambola
 *backup
 *_mink_val
 *.pyc
+test_suite/runtests
 demo/hard_spheres/output_minkowski
 demo/hard_spheres/polys
 demo/hexagonal_minimal_surface/output_minkowski
