@@ -1,4 +1,8 @@
 #include "write_functions.h"
+#include "print_explanations.h"
+#include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 void write_CompWiseTensor3MinkValResultType_to_file(const CalcOptions& CO, const CompWiseTensor3MinkValResultType &w){
 
@@ -17,7 +21,6 @@ void write_CompWiseTensor3MinkValResultType_to_file(const CalcOptions& CO, const
     wfile.open (filename.c_str());
 
     int sw = 20;
-    std::cout.precision(12);
     wfile.precision(12);
 
     wfile << "#";

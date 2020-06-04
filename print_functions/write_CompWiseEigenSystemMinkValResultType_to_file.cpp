@@ -1,4 +1,8 @@
 #include "write_functions.h"
+#include "print_explanations.h"
+#include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 void write_CompWiseEigenSystemMinkValResultType_to_file(const CalcOptions& CO,
                                                         const CompWiseEigenSystemMinkValResultType &w_eigsys,

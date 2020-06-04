@@ -1,12 +1,10 @@
 #ifndef CALCOPTIONS_H
 #define CALCOPTIONS_H
 
-#include "./Vector.h"
 #include <vector>
 #include <map>
 #include <iostream>
 #include <string>
-#include <stdio.h>
 #include <cstdlib>
 
 extern const std::pair<std::string, std::string> calc_forced;

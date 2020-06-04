@@ -1,4 +1,5 @@
 #include "print_functions.h"
+#include <iostream>
 
 void print_CompWiseVectorMinkValResultType(CompWiseVectorMinkValResultType w){
 //	std::cout << "Results for " << name << " :" << std::endl;

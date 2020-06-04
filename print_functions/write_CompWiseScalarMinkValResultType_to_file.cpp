@@ -1,4 +1,8 @@
 #include "write_functions.h"
+#include "print_explanations.h"
+#include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 void write_CompWiseScalarMinkValResultType_to_file( const CalcOptions& CO,
                                                     const CompWiseScalarMinkValResultType &w000,
@@ -16,7 +20,6 @@ void write_CompWiseScalarMinkValResultType_to_file( const CalcOptions& CO,
     else                 wfile.open (filename.c_str() , std::ios::out | std::ios::app);
 
     int sw = 20;
-    std::cout.precision(12);    
     wfile.precision(12);    
 
     if (append == false){

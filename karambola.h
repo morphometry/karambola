@@ -20,12 +20,9 @@
 #include "lib/check_command_line.h"
 #include "lib/check_surface.h"
 #include "lib/CalcOptions.h"
-//#include "lib/tomogram.h"
 
 #include "minkowski_functions/calculate.h"
 #include "minkowski_functions/calculate_wxxx.h"
-//#include "minkowski_functions/calculate_voxel.h"
-//#include "minkowski_functions/calculate_voxel_wxxx.h"
 
 #include "lib/calculate_eigensystem.h"
 

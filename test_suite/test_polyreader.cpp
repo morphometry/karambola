@@ -1,7 +1,7 @@
 #include "../karambola.h"
 #include "test_compare_functions.hpp"
 #include "catch.hpp"
-#include <sstream>
+#include <fstream>
 
 TEST_CASE( "polyreader fails" ){
     std::string infilename = "inputs/sphere.poly";

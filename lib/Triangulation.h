@@ -1,12 +1,10 @@
 #ifndef TRIANGULATION_H
 #define TRIANGULATION_H
 
-#include "./Vector.h"
+#include "Vector.h"
 #include <vector>
 #include <map>
 #include "readpoly.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 const int LABEL_UNASSIGNED = -300;
 const int NEIGHBOUR_UNASSIGNED = -200;

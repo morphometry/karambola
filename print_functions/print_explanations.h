@@ -1,6 +1,8 @@
 #ifndef PRINT_EXPLANATIONS
 #define PRINT_EXPLANATIONS
+
 #include <fstream>
+#include <string>
 #include <iomanip>
 
 extern const std::string version;
