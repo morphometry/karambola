@@ -48,10 +48,6 @@ LIBOBJ = \
 	lib/tensor.o \
 	lib/gsleig.o \
 	lib/check_command_line.o \
-#	minkowski_functions/calculate_voxel_w000.o \
-	minkowski_functions/calculate_voxel_w010.o \
-	minkowski_functions/calculate_voxel_w020.o \
-	minkowski_functions/lookup_tables.o \
 
 TEST_SOURCES = \
     test_suite/test_box.cpp \
@@ -73,9 +69,6 @@ $(LIBRARY): $(HDR) $(LIBOBJ)
 $(BINARY): $(HDR) lib $(BINARY).o lib/help.o
 	$(CXX) -o $(BINARY) $(BINARY).o $(LIBRARY) $(LDFLAGS)
 
-bilimbi: $(HDR) lib bilimbi.o
-	$(CXX) -o bilimbi bilimbi.o $(LIBRARY) $(LDFLAGS)
-
 %.o: %.cpp $(HDR)
 	$(CXX) $(CXXFLAGS) -o $*.o -c $<
 
@@ -85,10 +78,9 @@ runtests: $(TEST_OBJECTS) test_suite/runtests.o
 test: runtests
 	(cd test_suite && ./runtests)
 
-
 clean:
 	find . -name \*.o -delete
-	rm -f $(BINARY) bilimbi test_suite/runtests $(LIBRARY)
+	rm -f $(BINARY) test_suite/runtests $(LIBRARY)
 
 tar:
 	git archive --format=tar --prefix=karambola-$(VERSION_NUMBER)/ master | bzip2 >../karambola-$(VERSION_NUMBER).tar.bz2
