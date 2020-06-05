@@ -47,7 +47,11 @@ LIBOBJ = \
 	lib/readpoly.o \
 	lib/tensor.o \
 	lib/gsleig.o \
-	lib/check_command_line.o \
+
+KARAMBOLA_OBJECTS = \
+    karambola.o \
+    lib/help.o \
+    lib/check_command_line.o \
 
 TEST_SOURCES = \
     test_suite/test_box.cpp \
@@ -66,8 +70,8 @@ all: $(BINARY) test
 $(LIBRARY): $(HDR) $(LIBOBJ)
 	ar cr $(LIBRARY) $(LIBOBJ)
 
-$(BINARY): $(HDR) lib $(BINARY).o lib/help.o
-	$(CXX) -o $(BINARY) $(BINARY).o $(LIBRARY) $(LDFLAGS)
+$(BINARY): $(HDR) $(KARAMBOLA_OBJECTS) $(LIBRARY)
+	$(CXX) -o $(BINARY) $(KARAMBOLA_OBJECTS) $(LIBRARY) $(LDFLAGS)
 
 %.o: %.cpp $(HDR)
 	$(CXX) $(CXXFLAGS) -o $*.o -c $<
