@@ -4,7 +4,6 @@ CXX      = g++
 
 CXXFLAGS  = -Wall -O2 -DNDEBUG #-ansi
 #CXXFLAGS= -Wall -g
-BINARY = karambola
 LIBRARY = libkarambola.a
 
 VERSION_NUMBER = 2.0
@@ -62,16 +61,16 @@ TEST_OBJECTS = $(TEST_SOURCES:%.cpp=%.o)
 
 HDR = *.h lib/*.h minkowski_functions/*.h print_functions/*.h Makefile
 
-default: $(BINARY)
+default: karambola
 lib: $(LIBRARY)
 
-all: $(BINARY) test
+all: karambola test
 
 $(LIBRARY): $(HDR) $(LIBOBJ)
 	ar cr $(LIBRARY) $(LIBOBJ)
 
-$(BINARY): $(HDR) $(KARAMBOLA_OBJECTS) $(LIBRARY)
-	$(CXX) -o $(BINARY) $(KARAMBOLA_OBJECTS) $(LIBRARY) $(LDFLAGS)
+karambola: $(HDR) $(KARAMBOLA_OBJECTS) $(LIBRARY)
+	$(CXX) -o karambola $(KARAMBOLA_OBJECTS) $(LIBRARY) $(LDFLAGS)
 
 %.o: %.cpp $(HDR)
 	$(CXX) $(CXXFLAGS) -o $*.o -c $<
@@ -84,7 +83,7 @@ test: runtests
 
 clean:
 	find . -name \*.o -delete
-	rm -f $(BINARY) test_suite/runtests $(LIBRARY)
+	rm -f karambola test_suite/runtests $(LIBRARY)
 
 tar:
 	git archive --format=tar --prefix=karambola-$(VERSION_NUMBER)/ master | bzip2 >../karambola-$(VERSION_NUMBER).tar.bz2
