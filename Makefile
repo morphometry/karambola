@@ -53,6 +53,7 @@ KARAMBOLA_OBJECTS = \
     lib/check_command_line.o \
 
 TEST_SOURCES = \
+    test_suite/runtests.cpp \
     test_suite/test_box.cpp \
     test_suite/test_kugel.cpp \
     test_suite/test_polyreader.cpp \
@@ -72,11 +73,11 @@ $(LIBRARY): $(HDR) $(LIBOBJ)
 karambola: $(HDR) $(KARAMBOLA_OBJECTS) $(LIBRARY)
 	$(CXX) -o karambola $(KARAMBOLA_OBJECTS) $(LIBRARY) $(LDFLAGS)
 
+runtests: $(TEST_OBJECTS)
+	$(CXX) -o test_suite/runtests $(TEST_OBJECTS) $(LIBRARY) $(LDFLAGS)
+
 %.o: %.cpp $(HDR)
 	$(CXX) $(CXXFLAGS) -o $*.o -c $<
-
-runtests: $(TEST_OBJECTS) test_suite/runtests.o
-	$(CXX) $(CXXFLAGS) -o test_suite/runtests $(TEST_OBJECTS) test_suite/runtests.o $(LIBRARY) $(LDFLAGS)
 
 test: runtests
 	(cd test_suite && ./runtests)
