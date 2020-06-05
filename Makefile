@@ -89,3 +89,5 @@ clean:
 tar:
 	git archive --format=tar --prefix=karambola-$(VERSION_NUMBER)/ master | bzip2 >../karambola-$(VERSION_NUMBER).tar.bz2
 	bzcat ../karambola-$(VERSION_NUMBER).tar.bz2 | tar --delete karambola-$(VERSION_NUMBER)/demo | bzip2 >../karambola-$(VERSION_NUMBER)-nodemos.tar.bz2
+
+.PHONY: all clean default lib tar test
