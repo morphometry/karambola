@@ -48,7 +48,6 @@ LIBOBJ = \
 	lib/tensor.o \
 	lib/gsleig.o \
 	lib/check_command_line.o \
-	lib/help.o \
 #	minkowski_functions/calculate_voxel_w000.o \
 	minkowski_functions/calculate_voxel_w010.o \
 	minkowski_functions/calculate_voxel_w020.o \
@@ -71,7 +70,7 @@ all: $(BINARY) test
 $(LIBRARY): $(HDR) $(LIBOBJ)
 	ar cr $(LIBRARY) $(LIBOBJ)
 
-$(BINARY): $(HDR) lib $(BINARY).o
+$(BINARY): $(HDR) lib $(BINARY).o lib/help.o
 	$(CXX) -o $(BINARY) $(BINARY).o $(LIBRARY) $(LDFLAGS)
 
 bilimbi: $(HDR) lib bilimbi.o
