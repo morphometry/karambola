@@ -1,4 +1,5 @@
 #include "print_functions.h"
+#include <iostream>
 
 void print_CompWiseScalarMinkValResultType(CompWiseScalarMinkValResultType w){
 //	std::cout << "Results for " << name << " :" << std::endl;

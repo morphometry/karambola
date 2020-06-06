@@ -1,18 +1,9 @@
 #ifndef WRITE_FUNCTIONS
 #define WRITE_FUNCTIONS
 
-#include "../lib/common.h"
 #include "../lib/CalcOptions.h"
 #include "../lib/check_surface.h"
 #include "../lib/MinkValResultType.h"
-#include <math.h>
-#include <cassert>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include "print_explanations.h"
 
 void write_surface_props_to_file(const CalcOptions& CO, const SurfaceStatistics& SurfStat);
 

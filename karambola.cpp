@@ -8,7 +8,7 @@
 //!  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 #include "karambola.h"
-#include <sstream>
+#include <fstream>
 
 int main( int argc, char *argv[] ){
   

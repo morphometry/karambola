@@ -1,21 +1,14 @@
 #ifndef TRIANGULATION_H
 #define TRIANGULATION_H
 
-#include "./Vector.h"
+#include "Vector.h"
 #include <vector>
 #include <map>
 #include "readpoly.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 const int LABEL_UNASSIGNED = -300;
 const int NEIGHBOUR_UNASSIGNED = -200;
 
-
-extern const std::pair<std::string, std::string> calc_forced;
-extern const std::pair<std::string, std::string> cant_calc;
-extern const std::pair<std::string, std::string> reference_origin_string;
-extern const std::pair<std::string, std::string> reference_centroid_string;
 
 class Vertex{
     public:

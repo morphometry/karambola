@@ -2,8 +2,8 @@
 #define VECTOR_H_INCLUDED
 
 
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include <ostream>
 #include <iomanip>
 #include <vector>

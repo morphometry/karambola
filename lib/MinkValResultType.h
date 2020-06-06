@@ -17,7 +17,6 @@
 #define MINK_VAL_RESULT_TYPE
 
 
-#include <iostream>
 #include "Vector.h"
 #include "tensor.h"
 #include <map>
