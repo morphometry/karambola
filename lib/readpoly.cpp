@@ -514,7 +514,7 @@ namespace {
             }
             catch(const std::exception &error)
             {
-                throw_error ("Cannot read vertex ids for facet %lu: %s", num_facets, error.what ());
+                throw_error ("Cannot read vertex ids for facet %lu: %s", (unsigned long)num_facets, error.what ());
             }
 
             prop_list_t properties;
