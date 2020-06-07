@@ -4,6 +4,7 @@
 
 #include "readpoly.h"
 #include <stdexcept>
+#include <cstring>
 #include <iostream>
 #include <stdarg.h>
 #include <limits>
@@ -23,6 +24,16 @@ namespace {
         va_start (va, message);
         vsnprintf (buffer, 199, message.c_str (), va);
         throw std::runtime_error (buffer);
+    }
+
+    static
+    std::string printable_int (int c) {
+        if (c == EOF)
+            return "EOF";
+        else if (c == '\n')
+            return "<linebreak>";
+        else
+            return std::string (1, char (c));
     }
 
     static
@@ -112,6 +123,46 @@ namespace {
                 return is;
             }
         }
+    }
+
+    template <typename TYPE>
+    struct VariableReference
+    {
+        VariableReference(TYPE &var, const char *valid_chars_)
+            : ref(var)
+            , valid_chars(valid_chars_)
+        {
+        }
+
+        bool valid(int c) const
+        {
+            return std::strchr(valid_chars, c) != 0;
+        }
+
+        TYPE &ref;
+        const char *valid_chars;
+    };
+
+    std::istream &operator>> (std::istream &lhs, const VariableReference <double> &rhs)
+    {
+        int next = lhs.peek ();
+        if (rhs.valid (next))
+            lhs >> rhs.ref;
+        else
+            throw_error ("Expected number, got " + printable_int (next) + ".");
+        return lhs;
+    }
+
+    template <typename TYPE>
+    VariableReference<TYPE> integral_value (TYPE &var)
+    {
+        return VariableReference <TYPE> (var, "+-0123456789");
+    }
+
+    template <typename TYPE>
+    VariableReference<TYPE> float_value (TYPE &var)
+    {
+        return VariableReference <TYPE> (var, "+-.0123456789");
     }
 }
 
@@ -381,13 +432,6 @@ namespace {
         size_t expected_num_vertices, expected_num_facets;
         typedef PolyFileSink::prop_list_t prop_list_t;
 
-        static std::string printable_int (int c) {
-            if (c == EOF)
-                return "EOF";
-            else
-                return std::string (1, char (c));
-        }
-
         std::string drop_dos_carriage_return (std::string &str)
         {
             if (str.size () && str[str.size () - 1] == CARRIAGE_RETURN)
@@ -407,7 +451,10 @@ namespace {
 
         void read_vertex () {
             double x, y, z;
-            is >> x >> y >> z >> whitespace_including_comments;
+            is >> whitespace_but_no_newline >> float_value(x)
+                >> whitespace_but_no_newline >> float_value(y)
+                >> whitespace_but_no_newline >> float_value(z)
+                >> ignore_rest_of_line;
             if (!is)
                 throw_error ("Cannot read coordinates for vertex " + int_to_string (num_vertices) + ".");
 
