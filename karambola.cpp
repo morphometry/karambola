@@ -29,8 +29,10 @@ int main( int argc, char *argv[] ){
 
     ReadIntoTriangulation adap1 (&surface, CO.labels_set);
     TriangulatingPolyFileSink adap2 (&adap1);
-    parse_poly_file (&adap2, is);
-
+    if (is_off_file (CO.infilename))
+        parse_off_file (&adap2, is);
+    else
+        parse_poly_file (&adap2, is);
 
     //lookup_tables are needed for the minkowski calculations
     surface.create_vertex_polygon_lookup_table();
