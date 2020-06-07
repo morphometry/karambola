@@ -44,6 +44,7 @@ LIBOBJ = \
 	lib/MinkValResultType.o \
 	lib/calculate_eigensystem.o \
 	lib/readpoly.o \
+	lib/readoff.o \
 	lib/tensor.o \
 	lib/gsleig.o \
 

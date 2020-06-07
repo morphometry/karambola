@@ -87,5 +87,6 @@ public:
 };
 
 void parse_poly_file (PolyFileSink *sink, std::istream &);
+void parse_off_file (PolyFileSink *sink, std::istream &);
 
 #endif // READ_POLY_H_INCLUDED
