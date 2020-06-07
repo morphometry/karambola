@@ -61,7 +61,7 @@ namespace {
     }
 
     static
-    std::istream &extract_ws_but_no_newline (std::istream &is)
+    std::istream &whitespace_but_no_newline (std::istream &is)
     {
         if (!is)
             // stream is in error state already, do nothing
@@ -293,7 +293,7 @@ namespace {
 
             // coords
             double x, y, z;
-            is >> x >> y >> z >> extract_ws_but_no_newline;
+            is >> x >> y >> z >> whitespace_but_no_newline;
             if (!is)
                 throw_error ("Cannot read coordinates for vertex " + int_to_string (number) + ".");
 
@@ -320,7 +320,7 @@ namespace {
             vl.reserve (10);
             while (is_digit (is.peek ())) {
                 int v;
-                is >> v >> extract_ws_but_no_newline;
+                is >> v >> whitespace_but_no_newline;
                 v = lookup_vertex (v);
                 vl.push_back (v);
             }
@@ -442,12 +442,12 @@ namespace {
 
             size_t num_vertices_in_this_facet;
 
-            is >> num_vertices_in_this_facet >> extract_ws_but_no_newline;
+            is >> num_vertices_in_this_facet >> whitespace_but_no_newline;
 
             for (size_t i = 0; i != num_vertices_in_this_facet; ++i)
             {
                 int v;
-                is >> v >> extract_ws_but_no_newline;
+                is >> v >> whitespace_but_no_newline;
                 v = lookup_vertex (v);
                 vl.push_back (v);
             }
@@ -463,14 +463,14 @@ namespace {
             if (is.peek () != '\n' && is.peek () != '#')
             {
                 double r, g, b;
-                is >> r >> g >> b >> extract_ws_but_no_newline;
+                is >> r >> g >> b >> whitespace_but_no_newline;
             }
 
             // extract facet label from alpha value
             if (is.peek () != '\n' && is.peek () != '#')
             {
                 size_t a;
-                is >> a >> extract_ws_but_no_newline;
+                is >> a >> whitespace_but_no_newline;
                 properties.push_back("c(0, 0, 0, " + int_to_string(a) + ")");
             }
 
