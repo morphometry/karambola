@@ -369,7 +369,3 @@ namespace {
         std::vector <double> coords_;
     };
 }
-
-PolyFileSink *poly_file_sink_from_triangle_sink (TriangleSink *s) {
-    return new TrianglePolyFileSink (s);
-}

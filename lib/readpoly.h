@@ -88,8 +88,4 @@ public:
 
 void parse_poly_file (PolyFileSink *sink, std::istream &);
 
-// return an adapter class instance.
-// both sinks have to be delete'd by the user.
-PolyFileSink *poly_file_sink_from_triangle_sink (TriangleSink *);
-
 #endif // READ_POLY_H_INCLUDED
