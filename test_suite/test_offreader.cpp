@@ -53,7 +53,7 @@ TEST_CASE( "parse invalid truncated file" ){
     std::ifstream is ("inputs/cuboid-truncated.off");
     ReadIntoTriangulation adap1 (&surface, false);
     TriangulatingPolyFileSink adap2 (&adap1);
-    REQUIRE_THROWS_WITH(parse_off_file (&adap2, is), Contains("Cannot read vertex ids for facet 2."));
+    REQUIRE_THROWS_WITH(parse_off_file (&adap2, is), Contains("Cannot read vertex ids for facet 2: Expected number, got <linebreak>."));
 }
 
 TEST_CASE( "parse invalid truncated file, missing z coordinate" ){

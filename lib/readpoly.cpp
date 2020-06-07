@@ -143,7 +143,8 @@ namespace {
         const char *valid_chars;
     };
 
-    std::istream &operator>> (std::istream &lhs, const VariableReference <double> &rhs)
+    template <typename TYPE>
+    std::istream &operator>> (std::istream &lhs, const VariableReference <TYPE> &rhs)
     {
         int next = lhs.peek ();
         if (rhs.valid (next))
@@ -463,10 +464,9 @@ namespace {
 
         void read_vertex () {
             double x, y, z;
-            is >> whitespace_but_no_newline >> float_value(x)
-                >> whitespace_but_no_newline >> float_value(y)
-                >> whitespace_but_no_newline >> float_value(z)
-                >> ignore_rest_of_line;
+            is >> whitespace_but_no_newline >> float_value(x);
+            is >> whitespace_but_no_newline >> float_value(y);
+            is >> whitespace_but_no_newline >> float_value(z) >> ignore_rest_of_line;
             if (!is)
                 throw_error ("Cannot read coordinates for vertex " + int_to_string (num_vertices) + ".");
 
@@ -499,20 +499,23 @@ namespace {
             PolyFileSink::vertex_id_list_t vl;
             vl.reserve (10);
 
-            size_t num_vertices_in_this_facet;
-
-            is >> num_vertices_in_this_facet >> whitespace_but_no_newline;
-
-            for (size_t i = 0; i != num_vertices_in_this_facet; ++i)
+            try
             {
-                int v;
-                is >> v >> whitespace_but_no_newline;
-                v = lookup_vertex (v);
-                vl.push_back (v);
-            }
+                size_t num_vertices_in_this_facet;
+                is >> whitespace_but_no_newline >> integral_value(num_vertices_in_this_facet) >> whitespace_but_no_newline;
 
-            if (!is)
-                throw_error ("Cannot read vertex ids for facet " + int_to_string (num_facets) + ".");
+                for (size_t i = 0; i != num_vertices_in_this_facet; ++i)
+                {
+                    int v;
+                    is >> integral_value(v) >> whitespace_but_no_newline;
+                    v = lookup_vertex (v);
+                    vl.push_back (v);
+                }
+            }
+            catch(const std::exception &error)
+            {
+                throw_error ("Cannot read vertex ids for facet %lu: %s", num_facets, error.what ());
+            }
 
             prop_list_t properties;
             properties.object_id = "facet " + int_to_string (num_facets);
@@ -522,14 +525,16 @@ namespace {
             if (is.peek () != '\n' && is.peek () != '#')
             {
                 double r, g, b;
-                is >> r >> g >> b >> whitespace_but_no_newline;
+                is >> float_value(r) >> whitespace_but_no_newline;
+                is >> float_value(g) >> whitespace_but_no_newline;
+                is >> float_value(b) >> whitespace_but_no_newline;
             }
 
             // extract facet label from alpha value
             if (is.peek () != '\n' && is.peek () != '#')
             {
                 size_t a;
-                is >> a >> whitespace_but_no_newline;
+                is >> integral_value(a) >> whitespace_but_no_newline;
                 properties.push_back("c(0, 0, 0, " + int_to_string(a) + ")");
             }
 
@@ -540,7 +545,9 @@ namespace {
         void read_file () {
             is >> constant("OFF") >> whitespace_including_comments;
             size_t expected_num_edges; // ignored
-            is >> expected_num_vertices >> expected_num_facets >> expected_num_edges >> whitespace_including_comments;
+            is >> integral_value(expected_num_vertices) >> whitespace_but_no_newline
+                >> integral_value(expected_num_facets) >> whitespace_but_no_newline
+                >> integral_value(expected_num_edges) >> whitespace_including_comments;
 #ifdef DEBUG_POLY_READER
             std::cerr << "[OffFileReader::read_file] about to read " << expected_num_vertices << " vertices and "
                 << expected_num_facets << " facets\n";
