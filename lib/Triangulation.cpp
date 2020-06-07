@@ -17,7 +17,7 @@ int Triangulation::append_vertex(double x , double y, double z, int number_in_fi
 void Triangulation::change_pos_of_vertex(unsigned int i, double x , double y, double z){
     if(i >= Vertices.size () ){
         std::cerr << "can't change pos of vertex, vertex number " << i << " too high!" << std::endl;
-        exit(-1);
+        std::exit(-1);
     }
     Vertices.at(i).pos[0] = x;
     Vertices.at(i).pos[1] = y;
@@ -26,7 +26,7 @@ void Triangulation::change_pos_of_vertex(unsigned int i, double x , double y, do
 void Triangulation::change_pos_of_vertex(unsigned int i, Vector pos){
     if(i >= Vertices.size () ){
         std::cerr << "can't change pos of vertex, vertex number " << i << " too high!" << std::endl;
-        exit(-1);
+        std::exit(-1);
     }
     Vertices.at(i).pos = pos;
 }
