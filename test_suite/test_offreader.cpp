@@ -26,6 +26,20 @@ TEST_CASE( "parse valid off file without labels, but expecting to find some" ){
     REQUIRE_THROWS(parse_off_file (&adap2, is), Contains("no attribute c for facet 0"));
 }
 
+TEST_CASE( "parse valid off file without labels but with vertex colors" ){
+    Triangulation surface;
+    std::ifstream is ("inputs/cuboid-vertexColors.off");
+    ReadIntoTriangulation adap1 (&surface, false);
+    TriangulatingPolyFileSink adap2 (&adap1);
+    parse_off_file (&adap2, is);
+    CHECK (surface.n_triangles () == 6 * 2);
+    CHECK (surface.n_vertices () == 8);
+    CHECK_THAT(surface.get_pos_of_vertex (0), IsApprox({1, 0, 1}, 1e-12));
+    CHECK_THAT(surface.get_pos_of_vertex (7), IsApprox({0, -1, -1}, 1e-12));
+    for (int i = 0; i != 12; ++i)
+        CHECK (surface.label_of_triangle(i) == LABEL_UNASSIGNED);
+}
+
 TEST_CASE( "parse invalid off file without labels, references nonexisting vertex" ){
     Triangulation surface;
     std::ifstream is ("inputs/cuboid-wrongVertexIndexInFacet.off");
