@@ -164,6 +164,35 @@ namespace {
     {
         return VariableReference <TYPE> (var, "+-.0123456789");
     }
+
+    struct Constant
+    {
+        Constant(const std::string &expected_)
+            : expected(expected_)
+        {
+        }
+
+        const std::string &expected;
+    };
+
+    Constant constant (const std::string &value)
+    {
+        return Constant (value);
+    }
+
+    std::istream &operator>> (std::istream &lhs, const Constant &rhs)
+    {
+        const std::string &expected = rhs.expected;
+        std::string actual (expected.size (), ' ');
+        lhs.read (&actual[0], expected.size ());
+
+        if (!lhs)
+            throw_error ("error reading header %s from input file", expected.c_str ());
+        else if (actual != expected)
+            throw_error ("format error in .off file: expected %s, got %s", expected.c_str (), actual.c_str ());
+
+        return lhs;
+    }
 }
 
 // extract label stored in the alpha component of the color attribute
@@ -432,23 +461,6 @@ namespace {
         size_t expected_num_vertices, expected_num_facets;
         typedef PolyFileSink::prop_list_t prop_list_t;
 
-        std::string drop_dos_carriage_return (std::string &str)
-        {
-            if (str.size () && str[str.size () - 1] == CARRIAGE_RETURN)
-                return str.substr (0, str.size () - 1);
-            return str;
-        }
-
-        void extract_header (const std::string &tag) {
-            std::string tmp;
-            std::getline (is, tmp);
-            tmp = drop_dos_carriage_return (tmp);
-            if (tmp != tag) {
-                throw_error ("format error in .off file: expected %s, got %s",
-                    tag.c_str (), tmp.c_str ());
-            }
-        }
-
         void read_vertex () {
             double x, y, z;
             is >> whitespace_but_no_newline >> float_value(x)
@@ -526,8 +538,7 @@ namespace {
         }
 
         void read_file () {
-            extract_header ("OFF");
-            is >> whitespace_including_comments;
+            is >> constant("OFF") >> whitespace_including_comments;
             size_t expected_num_edges; // ignored
             is >> expected_num_vertices >> expected_num_facets >> expected_num_edges >> whitespace_including_comments;
 #ifdef DEBUG_POLY_READER
