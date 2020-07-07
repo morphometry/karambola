@@ -6,6 +6,7 @@
 #include <map>
 #include "readpoly.h"
 #include <iostream>
+#include <cstdlib>
 const int LABEL_UNASSIGNED = -300;
 const int NEIGHBOUR_UNASSIGNED = -200;
 
@@ -112,7 +113,7 @@ class Triangulation {
                 std::cout << "dot(aa,bb) = " << dot(aa,bb) << std::endl;
                 std::cout << "norm(aa)*norm(bb) = " << norm(aa)*norm(bb) << std::endl;
                 std::cout << "c = " << c << std::endl;
-                exit(-1);
+                std::exit(-1);
             }
             return alpha;
         }

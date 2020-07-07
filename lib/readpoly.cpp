@@ -4,6 +4,7 @@
 
 #include "readpoly.h"
 #include <stdexcept>
+#include <cstring>
 #include <iostream>
 #include <stdarg.h>
 #include <limits>
@@ -23,6 +24,16 @@ namespace {
         va_start (va, message);
         vsnprintf (buffer, 199, message.c_str (), va);
         throw std::runtime_error (buffer);
+    }
+
+    static
+    std::string printable_int (int c) {
+        if (c == EOF)
+            return "EOF";
+        else if (c == '\n')
+            return "<linebreak>";
+        else
+            return std::string (1, char (c));
     }
 
     static
@@ -61,7 +72,7 @@ namespace {
     }
 
     static
-    std::istream &extract_ws_but_no_newline (std::istream &is)
+    std::istream &whitespace_but_no_newline (std::istream &is)
     {
         if (!is)
             // stream is in error state already, do nothing
@@ -79,6 +90,109 @@ namespace {
                 return is;
             }
         }
+    }
+
+    static
+    std::istream &ignore_rest_of_line (std::istream &is)
+    {
+        is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return is;
+    }
+
+    static
+    std::istream &whitespace_including_comments (std::istream &is)
+    {
+        if (!is)
+            // stream is in error state already, do nothing
+            return is;
+        while (true) {
+            int c;
+            c = is.peek ();
+            switch (c)
+            {
+            case ' ':
+            case '\n':
+            case '\r':
+            case '\t':
+                is.get ();
+                break;
+            case '#':
+                is >> ignore_rest_of_line;
+                break;
+            default:
+                return is;
+            }
+        }
+    }
+
+    template <typename TYPE>
+    struct VariableReference
+    {
+        VariableReference(TYPE &var, const char *valid_chars_)
+            : ref(var)
+            , valid_chars(valid_chars_)
+        {
+        }
+
+        bool valid(int c) const
+        {
+            return std::strchr(valid_chars, c) != 0;
+        }
+
+        TYPE &ref;
+        const char *valid_chars;
+    };
+
+    template <typename TYPE>
+    std::istream &operator>> (std::istream &lhs, const VariableReference <TYPE> &rhs)
+    {
+        int next = lhs.peek ();
+        if (rhs.valid (next))
+            lhs >> rhs.ref;
+        else
+            throw_error ("Expected number, got " + printable_int (next) + ".");
+        return lhs;
+    }
+
+    template <typename TYPE>
+    VariableReference<TYPE> integral_value (TYPE &var)
+    {
+        return VariableReference <TYPE> (var, "+-0123456789");
+    }
+
+    template <typename TYPE>
+    VariableReference<TYPE> float_value (TYPE &var)
+    {
+        return VariableReference <TYPE> (var, "+-.0123456789");
+    }
+
+    struct Constant
+    {
+        Constant(const std::string &expected_)
+            : expected(expected_)
+        {
+        }
+
+        const std::string &expected;
+    };
+
+    Constant constant (const std::string &value)
+    {
+        return Constant (value);
+    }
+
+    std::istream &operator>> (std::istream &lhs, const Constant &rhs)
+    {
+        const std::string &expected = rhs.expected;
+        std::string actual (expected.size (), ' ');
+        lhs.read (&actual[0], expected.size ());
+
+        if (!lhs)
+            throw_error ("error reading header %s from input file", expected.c_str ());
+        else if (actual != expected)
+            throw_error ("format error in .off file: expected %s, got %s", expected.c_str (), actual.c_str ());
+
+        return lhs;
     }
 }
 
@@ -260,7 +374,7 @@ namespace {
 
             // coords
             double x, y, z;
-            is >> x >> y >> z >> extract_ws_but_no_newline;
+            is >> x >> y >> z >> whitespace_but_no_newline;
             if (!is)
                 throw_error ("Cannot read coordinates for vertex " + int_to_string (number) + ".");
 
@@ -287,7 +401,7 @@ namespace {
             vl.reserve (10);
             while (is_digit (is.peek ())) {
                 int v;
-                is >> v >> extract_ws_but_no_newline;
+                is >> v >> whitespace_but_no_newline;
                 v = lookup_vertex (v);
                 vl.push_back (v);
             }
@@ -327,49 +441,144 @@ void parse_poly_file (PolyFileSink *sink, std::istream &is) {
 }
 
 namespace {
-    // convert .poly data to triangles
-    class TrianglePolyFileSink : public PolyFileSink {
-    public:
-        TrianglePolyFileSink (TriangleSink *s)
-            : sink_ (s) {}
-
-        virtual ~TrianglePolyFileSink () {
-        }
-
-        virtual vertex_id_t insert_vertex (double x, double y, double z,
-                                           const prop_list_t &) {
-
-            vertex_id_t ret = coords_.size () / 3u;
-
-            coords_.push_back (x);
-            coords_.push_back (y);
-            coords_.push_back (z);
-
-            return ret;
-        }
-
-        virtual void insert_facet  (const vertex_id_list_t &ids,
-                                    const prop_list_t &) {
-            if (ids.size () != 3u)
-                throw_error ("Cannot decompose polygons yet, you need to pass in triangles.");
-
-            sink_->insert_triangle (
-                &coords_.at (ids[0]*3),
-                &coords_.at (ids[1]*3),
-                &coords_.at (ids[2]*3));
-        }
-
-        virtual void reexamine_vertex (vertex_id_t id, double *out) const
+    // object keeping the state during the process of reading a .off file
+    struct OffFileReader {
+        OffFileReader (std::istream &is_, PolyFileSink *sink_)
+            : is (is_), sink (sink_)
         {
-            const double *in = &coords_[3*id];
-            std::copy (in, in+3, out);
+            num_vertices = 0;
+            num_facets = 0;
+            expected_num_vertices = 0;
+            expected_num_facets = 0;
+            if (!is) {
+                throw_error ("Stream is not readable.  Does the input file exist?");
+            }
         }
 
-        TriangleSink *sink_;
-        std::vector <double> coords_;
+        std::istream &is;
+        PolyFileSink *sink;
+        std::vector <int> vertex_map;
+        size_t num_vertices, num_facets;
+        size_t expected_num_vertices, expected_num_facets;
+        typedef PolyFileSink::prop_list_t prop_list_t;
+
+        void read_vertex () {
+            double x, y, z;
+            is >> whitespace_but_no_newline >> float_value(x);
+            is >> whitespace_but_no_newline >> float_value(y);
+            is >> whitespace_but_no_newline >> float_value(z) >> ignore_rest_of_line;
+            if (!is)
+                throw_error ("Cannot read coordinates for vertex " + int_to_string (num_vertices) + ".");
+
+            prop_list_t properties;
+            properties.object_id = "vertex " + int_to_string (num_vertices);
+            properties.object_number = num_vertices;
+
+            int vert_id = sink->insert_vertex (x, y, z, properties);
+
+            // saved for later reference
+            if (vertex_map.size () <= num_vertices) {
+                vertex_map.resize (num_vertices + 1, -1);
+            }
+            vertex_map[num_vertices] = vert_id;
+            ++num_vertices;
+        }
+
+        int lookup_vertex (int v_id) {
+            if ((int)vertex_map.size () > v_id && v_id >= 0) {
+                int ret = vertex_map[v_id];
+                if (ret >= 0)
+                    return ret;
+            }
+            throw_error ("file refers to vertex %i which I do not know (vertex_map size = %i)",
+                         v_id, (int)vertex_map.size ());
+            abort ();  // silence warning
+        }
+
+        void read_facet () {
+            PolyFileSink::vertex_id_list_t vl;
+            vl.reserve (10);
+
+            try
+            {
+                size_t num_vertices_in_this_facet;
+                is >> whitespace_but_no_newline >> integral_value(num_vertices_in_this_facet) >> whitespace_but_no_newline;
+
+                for (size_t i = 0; i != num_vertices_in_this_facet; ++i)
+                {
+                    int v;
+                    is >> integral_value(v) >> whitespace_but_no_newline;
+                    v = lookup_vertex (v);
+                    vl.push_back (v);
+                }
+            }
+            catch(const std::exception &error)
+            {
+                throw_error ("Cannot read vertex ids for facet %lu: %s", (unsigned long)num_facets, error.what ());
+            }
+
+            prop_list_t properties;
+            properties.object_id = "facet " + int_to_string (num_facets);
+            properties.object_number = num_facets;
+
+            // ignore facet color
+            if (is.peek () != '\n' && is.peek () != '#')
+            {
+                double r, g, b;
+                is >> float_value(r) >> whitespace_but_no_newline;
+                is >> float_value(g) >> whitespace_but_no_newline;
+                is >> float_value(b) >> whitespace_but_no_newline;
+            }
+
+            // extract facet label from alpha value
+            if (is.peek () != '\n' && is.peek () != '#')
+            {
+                size_t a;
+                is >> integral_value(a) >> whitespace_but_no_newline;
+                properties.push_back("c(0, 0, 0, " + int_to_string(a) + ")");
+            }
+
+            sink->insert_facet (vl, properties);
+            ++num_facets;
+        }
+
+        void read_file () {
+            is >> constant("OFF") >> whitespace_including_comments;
+            size_t expected_num_edges; // ignored
+            is >> integral_value(expected_num_vertices) >> whitespace_but_no_newline
+                >> integral_value(expected_num_facets) >> whitespace_but_no_newline
+                >> integral_value(expected_num_edges) >> whitespace_including_comments;
+#ifdef DEBUG_POLY_READER
+            std::cerr << "[OffFileReader::read_file] about to read " << expected_num_vertices << " vertices and "
+                << expected_num_facets << " facets\n";
+#endif
+
+
+            for (size_t i = 0; i != expected_num_vertices; ++i)
+            {
+                read_vertex ();
+                is >> whitespace_including_comments;
+            }
+
+#ifdef DEBUG_POLY_READER
+            std::cerr << "[OffFileReader::read_file] read " << num_vertices << " vertices\n";
+#endif
+
+            for (size_t i = 0; i != expected_num_facets; ++i)
+            {
+                read_facet ();
+                is >> whitespace_including_comments;
+            }
+
+#ifdef DEBUG_POLY_READER
+            std::cerr << "[OffFileReader::read_file] read " << num_facets << " facets\n";
+#endif
+            // rest of file is ignored.
+        }
     };
 }
 
-PolyFileSink *poly_file_sink_from_triangle_sink (TriangleSink *s) {
-    return new TrianglePolyFileSink (s);
+void parse_off_file (PolyFileSink *sink, std::istream &is) {
+    OffFileReader r (is, sink);
+    r.read_file ();
 }

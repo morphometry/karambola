@@ -57,6 +57,7 @@ TEST_SOURCES = \
     test_suite/test_box.cpp \
     test_suite/test_kugel.cpp \
     test_suite/test_polyreader.cpp \
+    test_suite/test_offreader.cpp \
 
 TEST_OBJECTS = $(TEST_SOURCES:%.cpp=%.o)
 
@@ -73,7 +74,7 @@ $(LIBRARY): $(HDR) $(LIBOBJ)
 karambola: $(HDR) $(KARAMBOLA_OBJECTS) $(LIBRARY)
 	$(CXX) -o karambola $(KARAMBOLA_OBJECTS) $(LIBRARY) $(LDFLAGS)
 
-runtests: $(TEST_OBJECTS)
+runtests: $(TEST_OBJECTS) $(LIBRARY)
 	$(CXX) -o test_suite/runtests $(TEST_OBJECTS) $(LIBRARY) $(LDFLAGS)
 
 %.o: %.cpp $(HDR)
