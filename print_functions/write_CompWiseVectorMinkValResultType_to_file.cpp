@@ -1,8 +1,7 @@
 #include "write_functions.h"
 #include "print_explanations.h"
 #include <fstream>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <filesystem>
 
 void write_CompWiseVectorMinkValResultType_to_file( const CalcOptions& CO,
                                                     const CompWiseVectorMinkValResultType &w010,
@@ -12,7 +11,7 @@ void write_CompWiseVectorMinkValResultType_to_file( const CalcOptions& CO,
                                                     bool append){
     std::ofstream wfile;
 
-    mkdir(CO.outfoldername.c_str(),0755);    
+    std::filesystem::create_directories(CO.outfoldername);
 
 
     std::string filename = CO.outfoldername + "/w010_w110_w210_w310";

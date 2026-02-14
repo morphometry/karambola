@@ -1,5 +1,6 @@
 #pragma once
 #include "catch.hpp"
+#include <sstream>
 
 
 // The matcher class
@@ -21,7 +22,7 @@ public:
     }
 
     // Produces a string describing what this matcher does.
-    virtual std::string describe() const {
+    std::string describe() const override {
         std::ostringstream ss;
         ss << "is approx " << m_ref << " with tol " << m_tolerance;
         return ss.str();

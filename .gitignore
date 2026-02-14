@@ -10,3 +10,7 @@ demo/hard_spheres/output_minkowski
 demo/hard_spheres/polys
 demo/hexagonal_minimal_surface/output_minkowski
 libkarambola.a
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake

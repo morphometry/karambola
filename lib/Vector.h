@@ -103,7 +103,7 @@ inline std::ostream &operator<< (std::ostream &lhs, const Vector &rhs) {
 }
 
 inline bool operator== (const Vector &lhs, const Vector &rhs) {
-    return lhs[0] == rhs[0] and lhs[1] == rhs[1] and lhs[2] == rhs[2];
+    return lhs[0] == rhs[0] && lhs[1] == rhs[1] && lhs[2] == rhs[2];
 }
 
 // standard euclidean 2-norm

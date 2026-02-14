@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
-#include "sys/stat.h"
+#include <filesystem>
 
 
 void write_surface_props_to_file(const CalcOptions& CO, const SurfaceStatistics& SurfStat){
@@ -14,7 +14,7 @@ void write_surface_props_to_file(const CalcOptions& CO, const SurfaceStatistics&
     //write messages to file
     std::ofstream wfile;
 
-    mkdir(CO.outfoldername.c_str(),0755);
+    std::filesystem::create_directories(CO.outfoldername);
 
     std::string filename = CO.outfoldername + "/" + "surface_props";
     wfile.open(filename.c_str());
