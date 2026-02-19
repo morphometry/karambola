@@ -25,10 +25,6 @@ target_include_directories(karambola_lib PUBLIC
 
 target_link_libraries(karambola_lib PUBLIC GSL::gsl)
 
-if(MSVC)
-    target_compile_definitions(karambola_lib PUBLIC _USE_MATH_DEFINES)
-endif()
-
 # --- executable ---------------------------------------------------------------
 add_executable(karambola karambola.cpp)
 target_link_libraries(karambola PRIVATE karambola_lib)
