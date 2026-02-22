@@ -210,41 +210,41 @@ template CompWiseScalarMinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 
 template CompWiseVectorMinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 
 template CompWiseMatrixMinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 
 template CompWiseTensor3MinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 
 template CompWiseTensor4MinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 
 template CompWiseSphMinkMinkValResultType calculate_wxxx(
                     const std::string name,
                     const CalcOptions& CO,
                     const Triangulation& surface,
-                    const CompWiseScalarMinkValResultType w_scalar = CompWiseScalarMinkValResultType(),
-                    const CompWiseVectorMinkValResultType w_vector = CompWiseVectorMinkValResultType());
+                    const CompWiseScalarMinkValResultType w_scalar,
+                    const CompWiseVectorMinkValResultType w_vector);
 

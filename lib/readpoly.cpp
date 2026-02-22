@@ -18,7 +18,7 @@ namespace {
     static const char CARRIAGE_RETURN = '\xd';
 
     static
-    void throw_error (const std::string &message, ...) {
+    void throw_error (const std::string message, ...) {
         char buffer[200];
         va_list va;
         va_start (va, message);

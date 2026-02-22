@@ -1,8 +1,7 @@
 #include "write_functions.h"
 #include "print_explanations.h"
 #include <fstream>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <filesystem>
 
 void write_CompWiseTensor3MinkValResultType_to_file(const CalcOptions& CO, const CompWiseTensor3MinkValResultType &w){
 
@@ -17,7 +16,7 @@ void write_CompWiseTensor3MinkValResultType_to_file(const CalcOptions& CO, const
     if(CO.get_compute(w_name) == false && CO.get_force(w_name) == false) return;
 
     std::ofstream wfile;
-    mkdir(CO.outfoldername.c_str(),0755); 
+    std::filesystem::create_directories(CO.outfoldername);
     wfile.open (filename.c_str());
 
     int sw = 20;

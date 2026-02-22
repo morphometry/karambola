@@ -1,5 +1,8 @@
 #include "calculate.h"
 #include <math.h>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 CompWiseMatrixMinkValResultType calculate_w320( const Triangulation& surface,
                                                 const CompWiseScalarMinkValResultType& w300,

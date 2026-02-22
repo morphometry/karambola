@@ -1,8 +1,7 @@
 #include "write_functions.h"
 #include "print_explanations.h"
 #include <fstream>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <filesystem>
 
 void write_CompWiseEigenSystemMinkValResultType_to_file(const CalcOptions& CO,
                                                         const CompWiseEigenSystemMinkValResultType &w_eigsys,
@@ -21,7 +20,7 @@ void write_CompWiseEigenSystemMinkValResultType_to_file(const CalcOptions& CO,
 
 
     std::ofstream wfile;
-    mkdir(CO.outfoldername.c_str(),0755);
+    std::filesystem::create_directories(CO.outfoldername);
     if (append == false) wfile.open (filename.c_str());
     else                 wfile.open (filename.c_str() , std::ios::out | std::ios::app);
 

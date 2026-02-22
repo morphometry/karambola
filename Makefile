@@ -2,7 +2,7 @@
 # CXX = C++-Compiler
 CXX      = g++
 
-CXXFLAGS  = -Wall -O2 -DNDEBUG #-ansi
+CXXFLAGS  = -std=c++17 -Wall -O2 -DNDEBUG #-ansi
 #CXXFLAGS= -Wall -g
 LIBRARY = libkarambola.a
 
