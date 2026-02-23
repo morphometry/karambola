@@ -2,7 +2,7 @@
 #include "gsleig.h"
 #include <assert.h>
 #include <stdlib.h>
-#include <math.h>
+#include "Kmath.h"
 #include <iostream>
 #include "tensor.h"
 

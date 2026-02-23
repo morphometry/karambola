@@ -1,7 +1,7 @@
 #include "calculate_eigensystem.h"
 #include "common.h"
 #include "gsleig.h"
-#include <math.h>
+#include "Kmath.h"
 #include <cassert>
 
 CompWiseEigenSystemMinkValResultType calculate_eigensystem(CompWiseMatrixMinkValResultType& w){

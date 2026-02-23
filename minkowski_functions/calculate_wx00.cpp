@@ -1,9 +1,6 @@
 #include "calculate.h"
 #include <cassert>
-#include <math.h>
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include "../lib/Kmath.h"
 
 CompWiseScalarMinkValResultType calculate_w000(const Triangulation& surface){
     CompWiseScalarMinkValResultType w000;

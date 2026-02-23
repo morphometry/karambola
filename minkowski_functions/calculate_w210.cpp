@@ -1,6 +1,6 @@
 // calculate W210,  integral dA  (1/6) (1/R1 + 1/R2)  r
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 
 CompWiseVectorMinkValResultType calculate_w210(const Triangulation& surface){

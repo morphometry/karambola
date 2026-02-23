@@ -1,6 +1,6 @@
 #include "calculate_wxxx.h"
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <iostream>
 #include <string>
 

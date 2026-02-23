@@ -1,6 +1,6 @@
 // calculate W220,  integral dA  (1/6) (1/R1 + 1/R2)  r (tensor) r
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 
 CompWiseMatrixMinkValResultType calculate_w220( const Triangulation& surface,

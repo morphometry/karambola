@@ -2,7 +2,7 @@
 #define CALCULATE_WXXX
 
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <iostream>
 #include <string>
 

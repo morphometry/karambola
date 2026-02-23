@@ -1,5 +1,5 @@
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 
 CompWiseTensor3MinkValResultType calculate_w103(const Triangulation& surface){

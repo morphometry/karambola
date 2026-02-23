@@ -3,7 +3,7 @@
 
 
 #include <cassert>
-#include <cmath>
+#include "Kmath.h"
 #include <ostream>
 #include <iomanip>
 #include <vector>
