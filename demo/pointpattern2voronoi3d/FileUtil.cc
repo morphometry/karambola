@@ -26,7 +26,7 @@
 #include <cstdio>
 #include <sstream>
 #include <iomanip>
-#include <cmath>
+#include "../../lib/Kmath.h"
 
 #include <unistd.h> // for gettmp()
 

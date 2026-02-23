@@ -1,5 +1,5 @@
 #include "calculate.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 
 CompWiseMatrixMinkValResultType calculate_w020( const Triangulation& surface,

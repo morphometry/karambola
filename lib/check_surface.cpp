@@ -1,6 +1,6 @@
 #include "check_surface.h"
 
-#include <math.h>
+#include "Kmath.h"
 #include <cassert>
 #include <string>
 #include <iostream>

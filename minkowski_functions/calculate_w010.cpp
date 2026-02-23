@@ -1,6 +1,6 @@
 #include "calculate.h"
 #include "../lib/Vector.h"
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 
 CompWiseVectorMinkValResultType calculate_w010(const Triangulation& surface){

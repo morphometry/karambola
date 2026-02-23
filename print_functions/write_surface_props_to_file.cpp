@@ -1,6 +1,6 @@
 #include "write_functions.h"
 
-#include <math.h>
+#include "../lib/Kmath.h"
 #include <cassert>
 #include <iostream>
 #include <iomanip>
