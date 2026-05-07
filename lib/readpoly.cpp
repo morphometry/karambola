@@ -84,6 +84,7 @@ namespace {
             {
             case ' ':
             case '\t':
+            case '\r':
                 is.get ();
                 break;
             default:
